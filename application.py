@@ -7,6 +7,5 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
 @app.route("/")
-def index():
-    activate = Active.query.all()
-    return render_template("index.html", active=active)
+def index(): 
+    return render_template("index.html")
