@@ -11,7 +11,7 @@ engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
 chrome_options = Options()
-#chrome_options.add_argument("--headless")
+chrome_options.add_argument("--headless")
 
 driver = webdriver.Chrome(options=chrome_options, executable_path=ChromeDriverManager().install())
 
@@ -32,19 +32,29 @@ def getdineLA():
 		body = a.find("tbody")
 		for b in body.find_all("tr"):
 			#Extract name of restaurant
+			name = b.find("a", attrs={"target": "_blank"}).string.strip()
+
+			#Extract name of neighborhood
+			neighborhood = b.find("td", attrs={"headers": "view-name-1-table-column"}).string.strip()
+
+			#Extract cuisine type
+			cuisine = b.find("td", attrs={"headers": "view-name-table-column"}).string.strip()
 
 			#Extract lunch price if any
 			lunch = b.find_all("div", attrs={"class": "price-item price-item__lunch"})
-			lunchPrice = "N/A" if len(lunch) == 0 else lunch[0].find("span", attrs={"class": "number"}).string			
+			lunchPrice = "N/A" if len(lunch) == 0 else lunch[0].find("span", attrs={"class": "number"}).string.strip()
 	
 			#Extract dinner price if any
 			dinner = b.find_all("div", attrs={"class": "price-item price-item__dinner"})
-			dinnerPrice = "N/A" if len(dinner) == 0 else dinner[0].find("span", attrs={"class": "number"}).string			
+			dinnerPrice = "N/A" if len(dinner) == 0 else dinner[0].find("span", attrs={"class": "number"}).string.strip()
 
 			#Extract link to restaurant
 			restLink = "discoverlosangeles.com" + b.find_all('a')[0].get('href')
-		break
-	#db.commit()
+			
+			#SQL query to insert into table
+			db.execute("INSERT INTO dinela (name, neighborhood, lunchPrice, dinnerPrice, linkToDineLA, cuisine) VALUES (:name, :neighborhood, :lunchPrice, :dinnerPrice, :linkToDineLA, :cuisine)", {"name": name, "neighborhood": neighborhood, "cuisine": cuisine, "lunchPrice": lunchPrice, "dinnerPrice": dinnerPrice, "linkToDineLA": restLink, "cuisine": cuisine})			
+
+	db.commit()
 
 
 def getYelp():
