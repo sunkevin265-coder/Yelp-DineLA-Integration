@@ -33,9 +33,17 @@ def getdineLA():
 		for b in body.find_all("tr"):
 			#Extract name of restaurant
 
+			#Extract lunch price if any
+			lunch = b.find_all("div", attrs={"class": "price-item price-item__lunch"})
+			lunchPrice = "N/A" if len(lunch) == 0 else lunch[0].find("span", attrs={"class": "number"}).string			
+	
+			#Extract dinner price if any
+			dinner = b.find_all("div", attrs={"class": "price-item price-item__dinner"})
+			dinnerPrice = "N/A" if len(dinner) == 0 else dinner[0].find("span", attrs={"class": "number"}).string			
+
 			#Extract link to restaurant
 			restLink = "discoverlosangeles.com" + b.find_all('a')[0].get('href')
-
+		break
 	#db.commit()
 
 
