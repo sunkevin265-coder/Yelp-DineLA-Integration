@@ -32,7 +32,9 @@ def getdineLA():
 		body = a.find("tbody")
 		for b in body.find_all("tr"):
 			#Extract name of restaurant
+
 			#Extract link to restaurant
+			restLink = "discoverlosangeles.com" + b.find_all('a')[0].get('href')
 
 	#db.commit()
 
