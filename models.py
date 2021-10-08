@@ -12,6 +12,7 @@ class DineLA(db.Model):
 	neighborhood = db.Column(db.Integer, nullable=False)
 	lunchPrice = db.Column(db.Integer, nullable=True)
 	dinnerPrice = db.Column(db.Integer, nullable=True)
+	linkToDineLA = db.Column(db.Integer, nullable=False)
 
 
 class Yelp(db.Model):
