@@ -32,13 +32,16 @@ def getdineLA():
 		body = a.find("tbody")
 		for b in body.find_all("tr"):
 			#Extract name of restaurant
-			name = b.find("a", attrs={"target": "_blank"}).string.strip()
+			try:
+				name = b.find("a", attrs={"target": "_blank"}).string.strip()
+			except:
+				continue
 
 			#Extract name of neighborhood
-			neighborhood = b.find("td", attrs={"headers": "view-name-1-table-column"}).string.strip()
+			neighborhood = b.find("td", attrs={"class": "views-field views-field-name-1"}).string.strip()
 
 			#Extract cuisine type
-			cuisine = b.find("td", attrs={"headers": "view-name-table-column"}).string.strip()
+			cuisine = b.find("td", attrs={"class": "views-field views-field-name"}).string.strip()
 
 			#Extract lunch price if any
 			lunch = b.find_all("div", attrs={"class": "price-item price-item__lunch"})
@@ -52,16 +55,19 @@ def getdineLA():
 			restLink = "discoverlosangeles.com" + b.find_all('a')[0].get('href')
 			
 			#SQL query to insert into table
-			db.execute("INSERT INTO dinela (name, neighborhood, lunchPrice, dinnerPrice, linkToDineLA, cuisine) VALUES (:name, :neighborhood, :lunchPrice, :dinnerPrice, :linkToDineLA, :cuisine)", {"name": name, "neighborhood": neighborhood, "cuisine": cuisine, "lunchPrice": lunchPrice, "dinnerPrice": dinnerPrice, "linkToDineLA": restLink, "cuisine": cuisine})			
+			db.execute("INSERT INTO dinela (name, neighborhood, lunchprice, dinnerprice, linktodinela, cuisine) VALUES (:name, :neighborhood, :lunchprice, :dinnerprice, :linktodinela, :cuisine)", {"name": name, "neighborhood": neighborhood, "cuisine": cuisine, "lunchprice": lunchPrice, "dinnerprice": dinnerPrice, "linktodinela": restLink, "cuisine": cuisine})			
 
 	db.commit()
 
 
 def getYelp():
 	db.execute("DELETE FROM yelp")	
+	dl = db.execute("SELECT * FROM dinela")
+	for row in dl:
+		print(row)
 
 def main():
-	getdineLA()
+	#getdineLA()
 	getYelp()
 
 if __name__ == '__main__':
