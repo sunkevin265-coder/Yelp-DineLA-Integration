@@ -10,9 +10,9 @@ class DineLA(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String, nullable=False)
 	neighborhood = db.Column(db.String, nullable=False)
-	lunchPrice = db.Column(db.String, nullable=True)
-	dinnerPrice = db.Column(db.String, nullable=True)
-	linkToDineLA = db.Column(db.String, nullable=False)
+	lunchprice = db.Column(db.String, nullable=True)
+	dinnerprice = db.Column(db.String, nullable=True)
+	linktodinela = db.Column(db.String, nullable=False)
 	cuisine = db.Column(db.String, nullable=False)
 
 class Yelp(db.Model):
