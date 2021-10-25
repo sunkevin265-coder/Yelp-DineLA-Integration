@@ -7,11 +7,14 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 import os
 import time
 
+delimiters = ["-", "|"]
+locations = ["Venice"]
+
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
 chrome_options = Options()
-chrome_options.add_argument("--headless")
+#chrome_options.add_argument("--headless")
 
 driver = webdriver.Chrome(options=chrome_options, executable_path=ChromeDriverManager().install())
 
@@ -64,7 +67,22 @@ def getYelp():
 	db.execute("DELETE FROM yelp")	
 	dl = db.execute("SELECT * FROM dinela")
 	for row in dl:
-		print(row)
+		name = stripRestaurant(row[1])
+		#Perform Yelp search
+		driver.get("www.yelp.com")
+
+def stripRestaurant(rest_name): 
+		result = []
+		temp_list = rest_name.split()
+		#Scrape out location data
+		for i in temp_list:
+			if i in delimiters or i in locations:
+				break
+			else:
+				result.append(i)
+		restaurant_name = " ".join(result)
+		return restaurant_name		
+			
 
 def main():
 	#getdineLA()
